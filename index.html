@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 번호 생성기</title>
+    <style>
+      html {
+        height: 100vh;
+        width: 100%;
+      }
+      body {
+          font-family: Arial, sans-serif;
+          /* display: flex; */
+          /* justify-content: center; */
+          /* align-items: center; /* Added alignment */ */
+          height: 100vh;
+          background-color: #f0f0f0;
+          background-image: url("https://res.cloudinary.com/djzf2mipa/image/upload/v1707306555/AiClass/bg_zc3n8p.webp");
+          background-size: cover;
+          background-position: center;
+        background-repeat: no-repeat;
+          width: 100%;
+      }
+
+      .container {
+          text-align: center;
+          padding: auto;
+          width: 100%;
+        height:100%;
+      }
+
+      .lotto-numbers {
+          margin: 20px 0;
+          padding: 10px;
+          border-radius: 5px;
+          /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  */
+      }
+
+      .number {
+          display: inline-block;
+          margin: 5px;
+          font-size: 38px;
+          width:  50px;
+          height: 50px;
+          line-height: 50px;
+          border-radius: 50%;
+          background-color: #fdd835;
+          color: #333;
+          animation: rotate 0.5s ease-in-out;
+          /* Added glowing effect */
+          box-shadow: 0 0 10px #fdd835;
+          animation: glow 1s ease-in-out infinite alternate;
+      }
+
+      button {
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          background-color: cyan; /* 배경색 변경 */
+          color: white;
+          font-weight: 900;
+          cursor: pointer;
+          font-size: 40px;
+          position: absolute;
+          bottom: 40px;
+          left: 50%; /* 수평 중앙 정렬 */
+          transform: translateX(-50%); /* 올바른 구문 사용 */
+      }
+       
+footer {
+    color: white;
+    position: absolute;
+    bottom: 10px;
+    left: 50%; /* 수평 중앙 정렬 */
+    transform: translateX(-50%); /* 올바른 구문 사용 */
+    text-decoration: none;
+}
+
+
+      button:hover {
+          background-color: deeppink;
+      }
+
+      @keyframes rotate {
+          from {
+              transform: rotate(0deg);
+          }
+          to {
+              transform: rotate(360deg);
+          }
+      }
+
+      @keyframes glow {
+          from {
+              box-shadow: 0 0 10px #fdd835;
+          }
+          to {
+              box-shadow: 0 0 100px #fdd835;
+          }
+      }
+
+      .confetti {
+          position: fixed;
+          width: 30px;
+          height: 30px;
+          background-color: #fdd835;
+          animation: fall 2s linear infinite;
+      }
+
+      @keyframes fall {
+          0% {
+              top: -10px;
+              transform: rotate(0deg);
+          }
+          100% {
+              top: 100vh;
+              transform: rotate(3600deg);
+          }
+      }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="lotto-numbers" class="lotto-numbers"></div>
+        <button onclick="generateLottoNumbers()">LOTTO</button>
+    </div>
+    <script>
+        function generateLottoNumbers() {
+            const numbers = [];
+            while (numbers.length < 6) {
+                const num = Math.floor(Math.random() * 45) + 1;
+                if (!numbers.includes(num)) {
+                    numbers.push(num);
+                }
+            }
+            numbers.sort((a, b) => a - b);
+
+            const displayArea = document.getElementById('lotto-numbers');
+            displayArea.innerHTML = ''; // 이전 번호를 지우고 애니메이션을 시작합니다.
+            numbers.forEach((number, index) => {
+                setTimeout(() => {
+                    const numberElement = document.createElement('span');
+                    numberElement.className = 'number';
+                    numberElement.innerText = number;
+                    displayArea.appendChild(numberElement);
+
+                    // 애니메이션을 추가합니다.
+                    numberElement.style.animation = 'rotate 0.5s ease-in-out';
+                    
+                    // 애니메이션 종료 후에는 스타일을 초기화합니다.
+                    setTimeout(() => {
+                        numberElement.style.animation = '';
+                    }, 500); // 애니메이션 지속 시간과 일치해야 합니다.
+                }, index * 500); // 각 번호의 애니메이션이 순차적으로 발생하도록 설정합니다.
+            });
+
+            // 번호 생성이 완료된 후 팡파레 효과 실행
+            setTimeout(showConfetti, numbers.length * 500);
+        }
+
+        function showConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.top = `${Math.random() * -100}vh`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.animationDuration = `${Math.random() * 3 + 2}s`; // 애니메이션 지속 시간 랜덤화
+                confetti.style.opacity = Math.random();
+                confetti.style.transform = `scale(${Math.random()})`;
+                document.body.appendChild(confetti);
+
+                // 애니메이션 종료 후 confetti 요소 제거
+                setTimeout(() => {
+                    confetti.remove();
+                }, 2000 + Math.random() * 1000);
+            }
+        }
+    </script>
+  <footer style="margin-top:50px;" class="text-center text-gray-800 dark:text-white ">
+    🦾©2024<a href="https://www.youtube.com/channel/UCLP2jMz-MpVgsGizdjfQDZA" target="_blank"
+      style="font-weight: 900;"> RunBuilder</a>
+  </footer>
+</body>
+</html>
